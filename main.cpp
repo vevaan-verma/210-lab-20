@@ -17,20 +17,19 @@ public:
 	Chair() {
 
 		prices = new double[SIZE];
-		legs = 0;
+		legs = (rand() % 2 == 0) ? 3 : 4; // randomly assign 3 or 4 legs
+
+		const int MIN = 10000, MAX = 99999;
 
 		for (int i = 0; i < SIZE; i++)
-			prices[i] = 0;
+			prices[i] = (rand() % (MAX - MIN + 1) + MIN) / (double) 100;
 
 	}
 
-	Chair(int l) {
+	Chair(int l, double pricesArr[]) {
 
-		prices = new double[SIZE];
+		this->prices = pricesArr; // point to the passed array
 		legs = l;
-
-		for (int i = 0; i < SIZE; i++)
-			prices[i] = 0;
 
 	}
 
@@ -60,46 +59,55 @@ public:
 
 	void print() {
 
-		cout << "CHAIR DATA - legs: " << legs << endl;
-		cout << "Price history: ";
+		cout << "CHAIR DATA:" << endl;
+		cout << "Legs: " << legs << endl;
+		cout << "Price History: ";
 
 		for (int i = 0; i < SIZE; i++)
 			cout << prices[i] << " ";
 
-		cout << endl << "Historical avg price: " << getAveragePrices();
-		cout << endl << endl;
+		cout << endl << "Historical Average Price: " << getAveragePrices();
+		cout << endl << "-------------------------------------" << endl << endl;
 
 	}
 };
 
 int main() {
 
+	srand(time(0)); // seed random number generator with current time to get different random numbers each time
 	cout << fixed << setprecision(2);
 
-	//creating pointer to first chair object
-	Chair* chairPtr = new Chair;
-	chairPtr->setLegs(4);
-	chairPtr->setPrices(121.21, 232.32, 414.14);
-	chairPtr->print();
+	// creating pointer to first chair object (uses default constructor)
+	Chair* chair1 = new Chair;
+	chair1->print();
+	delete chair1; // deallocate memory
+	chair1 = nullptr;
 
-	//creating dynamic chair object with constructor
-	Chair* livingChair = new Chair(3);
-	livingChair->setPrices(525.25, 434.34, 252.52);
-	livingChair->print();
-	delete livingChair;
-	livingChair = nullptr;
+	// creating pointer to second chair object (uses parameterized constructor)
+	double chair2Prices[SIZE] = { 525.25, 434.34, 252.52 };
+	Chair* chair2 = new Chair(3, chair2Prices);
+	chair2->print();
+	delete chair2; // deallocate memory
+	chair2 = nullptr;
 
-	//creating dynamic array of chair objects
-	Chair* collection = new Chair[SIZE];
-	collection[0].setLegs(4);
-	collection[0].setPrices(441.41, 552.52, 663.63);
-	collection[1].setLegs(4);
-	collection[1].setPrices(484.84, 959.59, 868.68);
-	collection[2].setLegs(4);
-	collection[2].setPrices(626.26, 515.15, 757.57);
+	// creating dynamic array of chair objects
+	Chair* chairCollection = new Chair[SIZE];
+
+	// the first element uses the default constructor
+
+	// the second element uses the parameterized constructor
+	double chair4Prices[SIZE] = { 484.84, 959.59, 868.68 };
+	chairCollection[1] = Chair(4, chair4Prices);
+
+	// the third element uses the default constructor and setter methods
+	chairCollection[2].setLegs(4);
+	chairCollection[2].setPrices(626.26, 515.15, 757.57);
 
 	for (int i = 0; i < SIZE; i++)
-		collection[i].print();
+		chairCollection[i].print();
+
+	delete[] chairCollection; // deallocate memory
+	chairCollection = nullptr;
 
 	return 0;
 
