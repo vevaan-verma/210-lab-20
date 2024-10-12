@@ -72,6 +72,9 @@ public:
 	}
 };
 
+// main() is the entry point and driver of the program
+// arguments: none
+// returns: int - the exit code of the program
 int main() {
 
 	srand(time(0)); // seed random number generator with current time to get different random numbers each time
